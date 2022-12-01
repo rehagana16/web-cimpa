@@ -70,3 +70,40 @@ func (cc PesertaCimpaController) GetPesertaCimpaWithID(w http.ResponseWriter, r 
 	w.WriteHeader(201)
 	fmt.Fprintf(w, "%s", uj)
 }
+
+func (cc PesertaCimpaController) GetAllPesertaCimpaWithKlasis(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	klasis := r.URL.Query().Get("klasis")
+	fmt.Println(klasis)
+	fmt.Printf("klasis data type %T\n", klasis)
+	u, err := models.GetAllPesertaCimpaByKlasis(klasis)
+	fmt.Printf("%+v\n", u)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	uj, _ := json.Marshal(u)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "%s", uj)
+}
+
+func (cc PesertaCimpaController) DeleteAll(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	err := models.DeleteAllPeserta()
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	d := PesertaCimpaResp{"1", "success", CustomMessage{"All Peserta Deleted"}}
+
+	uj, _ := json.Marshal(d)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "%s", uj)
+}

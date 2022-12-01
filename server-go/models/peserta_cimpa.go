@@ -17,6 +17,19 @@ type PesertaCimpa struct {
 	// IsConfirmed  bool   `json:"is_confirmed"`
 }
 
+type PesertaCimpaDetail struct {
+	Nama         string `json:"nama"`
+	Klasis       string `json:"klasis"`
+	Runggun      string `json:"runggun"`
+	IdPeserta    string `json:"id_peserta"`
+	JenisKelamin string `json:"jenis_kelamin"`
+	NoTelp       string `json:"no_telp"`
+	LinkSosmed   string `json:"link_sosmed"`
+	BuktiBayar   string `json:"bukti_bayar"`
+	Foto         string `json:"foto"`
+	IsConfirmed  bool   `json:"is_confirmed"`
+}
+
 type PesertaCimpaResult struct {
 	Nama         string `json:"nama"`
 	Klasis       string `json:"klasis"`
@@ -29,6 +42,7 @@ type PesertaCimpaResult struct {
 }
 
 func CreatePeserta(od PesertaCimpa) (PesertaCimpa, error) {
+
 	//insert values
 	sqlStr := "INSERT into peserta_cimpa(nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, bukti_bayar, foto, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
@@ -51,6 +65,45 @@ func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 	checkErr(err)
 
 	return peserta, nil
+}
+
+func GetAllPesertaCimpaByKlasis(klasis string) ([]PesertaCimpaDetail, error) {
+	//select peserta
+	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa WHERE klasis=?"
+	stmt, err := config.DB.Prepare(sqlStr)
+	checkErr(err)
+	var allPeserta []PesertaCimpaDetail
+	// err = stmt.Query(klasis).Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun, &peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.LinkSosmed, &peserta.Foto)
+	rows, err := stmt.Query(klasis)
+	checkErr(err)
+
+	for rows.Next() {
+		var peserta PesertaCimpaDetail
+		if err := rows.Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun,
+			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
+			&peserta.BuktiBayar, &peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
+			panic(err)
+		}
+		allPeserta = append(allPeserta, peserta)
+	}
+
+	if err = rows.Err(); err != nil {
+		panic(err)
+	}
+
+	return allPeserta, nil
+}
+
+func DeleteAllPeserta() error {
+	//delete all peserta
+	sqlStr := "Truncate TABLE peserta_cimpa"
+	stmt, err := config.DB.Prepare(sqlStr)
+	checkErr(err)
+
+	stmt.Exec()
+	checkErr(err)
+
+	return nil
 }
 
 func checkErr(err error) {

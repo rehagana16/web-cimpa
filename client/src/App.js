@@ -5,14 +5,21 @@ import {
   Route,
   //Link
 } from 'react-router-dom';
-// import Registration from "./Pages/Registration";
+import Registration from "./Pages/Registration";
 import ProfilPeserta from "./Pages/ProfilPeserta";
+import ListPeserta from "./Pages/ListPeserta";
+import Konfirmasi from "./Pages/Konfirmasi";
+import Login from "./Pages/Login";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path='/' element={< ProfilPeserta />}></Route>
+        <Route exact path='/' element={< Login />}></Route>
+        <Route exact path='/profil' element={< ProfilPeserta />}></Route>
+        <Route exact path='/registrasi' element={<Registration/>}></Route>
+        <Route exact path='/listPeserta' element={<ListPeserta/>}></Route>
+        <Route exact path='/konfirmasi' element={<Konfirmasi/>}></Route>
       </Routes>
     </Router>
   );

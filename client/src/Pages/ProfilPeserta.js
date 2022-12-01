@@ -8,19 +8,32 @@ function ProfilPeserta() {
 
     const [peserta, setPeserta] = useState(null);
 
-    useEffect(() => {
+    const getPeserta = () => {
         Axios.get("api/pesertaCimpa/" + id)
             .then((res) => {
-                setPeserta(res)
+                setPeserta(res.data)
                 console.log(res)
             })
             .catch(() => {
                 console.log("ERROR")
             })
-    })
+    }
+
+    useEffect(() => {
+        getPeserta()
+    }, [])
+
+    
     return (
+        peserta !== null &&
         <div>
-            Profile Page
+            <img className="w-1/2" src={peserta.foto} alt="Foto Peserta"></img>
+            <div>{peserta.nama}</div>
+            <div>{peserta.klasis}</div>
+            <div>{peserta.runggun}</div>
+            <div>{peserta.link_sosmed}</div>
+            <div>{peserta.no_telp}</div>
+            <div>{peserta.id_peserta}</div>
         </div>
     )
 }

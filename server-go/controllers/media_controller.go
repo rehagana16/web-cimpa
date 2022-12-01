@@ -36,6 +36,7 @@ func (mc MediaController) FileUpload(w http.ResponseWriter, r *http.Request, p h
 	// //populate data file
 	// json.NewDecoder(r.Body).Decode(&u)
 	// fmt.Printf("%+v\n", u)
+	fmt.Println("MASUK FILE UPLOAD")
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		fmt.Println(err.Error())

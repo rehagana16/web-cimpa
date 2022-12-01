@@ -8,7 +8,7 @@ import data from "../data/data"
 // import util from "../service/util";
 // import jwt_decode from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
-import { Axios } from "../config/axios";
+import { Axios } from "../config/axios"
 
 const form = {
     nama: "",
@@ -17,8 +17,8 @@ const form = {
     jenisKelamin: "",
     noTelp: "",
     linkSosmed: "",
-    foto: "TEST FOTO",
-    buktiBayar: "TEST BUKTI PEMBAYARAN", 
+    foto: "",
+    buktiBayar: "", 
     pesertaId: "xxxxxxxxx",
     isConfirmed: false,
 }
@@ -234,8 +234,8 @@ function Registration() {
                                                 className="btn btn-primary"
                                                 disabled={!(dirty && isValid && doneUpload)}>{!doneUpload ? "Sedang Mengunggah" : "Submit"}</button>
                                         </Form>
-                                        <Link to="/dataPeserta/?q=1" ><button
-                                            className="btn btn-primary">Lihat data</button></Link>
+                                        <Link to="/listPeserta" ><button
+                                            className="flex m-0 justify-center bg-blue-700 hover:bg-blue-900s text-white font-bold py-2 px-4 border border-blue-700 rounded">Lihat data</button></Link>
                                     </div>
                                 </div >
                             </div >
