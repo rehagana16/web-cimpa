@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"server/config"
 )
 
@@ -18,6 +19,7 @@ type PesertaCimpa struct {
 }
 
 type PesertaCimpaDetail struct {
+	Id           string `json:"id"`
 	Nama         string `json:"nama"`
 	Klasis       string `json:"klasis"`
 	Runggun      string `json:"runggun"`
@@ -41,6 +43,10 @@ type PesertaCimpaResult struct {
 	Foto         string `json:"foto"`
 }
 
+type IdPeserta struct {
+	Id string `json:"id"`
+}
+
 func CreatePeserta(od PesertaCimpa) (PesertaCimpa, error) {
 
 	//insert values
@@ -55,6 +61,40 @@ func CreatePeserta(od PesertaCimpa) (PesertaCimpa, error) {
 	return od, nil
 }
 
+func UpdateStatusKonfirmasiPeserta(id string) error {
+	//update value
+	sqlStr := "UPDATE peserta_cimpa SET is_confirmed=1 WHERE id=?"
+	stmt, err := config.DB.Prepare(sqlStr)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func UpdateBuktiBayar(url string, id string) error {
+	//update value
+	sqlStr := "UPDATE peserta_cimpa SET bukti_bayar=? WHERE id=?"
+	stmt, err := config.DB.Prepare(sqlStr)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(url, id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
 func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 	//select peserta
 	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, foto FROM peserta_cimpa WHERE id=?"
@@ -67,9 +107,36 @@ func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 	return peserta, nil
 }
 
+func GetAllPesertaCimpa() ([]PesertaCimpaDetail, error) {
+	//select peserta
+	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa"
+	stmt, err := config.DB.Prepare(sqlStr)
+	checkErr(err)
+	var allPeserta []PesertaCimpaDetail
+	// err = stmt.Query(klasis).Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun, &peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.LinkSosmed, &peserta.Foto)
+	rows, err := stmt.Query()
+	checkErr(err)
+
+	for rows.Next() {
+		var peserta PesertaCimpaDetail
+		if err := rows.Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun,
+			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
+			&peserta.BuktiBayar, &peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
+			panic(err)
+		}
+		allPeserta = append(allPeserta, peserta)
+	}
+
+	if err = rows.Err(); err != nil {
+		panic(err)
+	}
+
+	return allPeserta, nil
+}
+
 func GetAllPesertaCimpaByKlasis(klasis string) ([]PesertaCimpaDetail, error) {
 	//select peserta
-	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa WHERE klasis=?"
+	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa WHERE klasis=?"
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
 	var allPeserta []PesertaCimpaDetail
@@ -79,7 +146,7 @@ func GetAllPesertaCimpaByKlasis(klasis string) ([]PesertaCimpaDetail, error) {
 
 	for rows.Next() {
 		var peserta PesertaCimpaDetail
-		if err := rows.Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun,
+		if err := rows.Scan(&peserta.Id, &peserta.Nama, &peserta.Klasis, &peserta.Runggun,
 			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
 			&peserta.BuktiBayar, &peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
 			panic(err)

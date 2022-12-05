@@ -1,3 +1,7 @@
+//TODO :
+//** Make delete bukti bayar api
+//** Make COnfirmation for admin
+
 package controllers
 
 import (
@@ -5,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"server/models"
+	"server/services"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -59,7 +64,6 @@ func (cc PesertaCimpaController) GetPesertaCimpaWithID(w http.ResponseWriter, r 
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	u, err := models.GetPesertaCimpaByID(p.ByName("id"))
-	fmt.Printf("%+v\n", u)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -77,17 +81,87 @@ func (cc PesertaCimpaController) GetAllPesertaCimpaWithKlasis(w http.ResponseWri
 	klasis := r.URL.Query().Get("klasis")
 	fmt.Println(klasis)
 	fmt.Printf("klasis data type %T\n", klasis)
-	u, err := models.GetAllPesertaCimpaByKlasis(klasis)
-	fmt.Printf("%+v\n", u)
+	if klasis == "Admin" {
+		fmt.Println("TEST")
+		u, err := models.GetAllPesertaCimpa()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		uj, _ := json.Marshal(u)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(201)
+		fmt.Fprintf(w, "%s", uj)
+	} else {
+		u, err := models.GetAllPesertaCimpaByKlasis(klasis)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		uj, _ := json.Marshal(u)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(201)
+		fmt.Fprintf(w, "%s", uj)
+	}
+
+}
+
+func (cc PesertaCimpaController) ConfirmPeserta(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+
+	u := models.IdPeserta{}
+
+	json.NewDecoder(r.Body).Decode(&u)
+	// fmt.Printf("%+v\n", u)
+	// fmt.Printf("%s\n", u.Id)
+
+	err := models.UpdateStatusKonfirmasiPeserta(u.Id)
+
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	uj, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "Status Konfirmasi Peserta dengan id %s berhasil di update", u.Id)
+
+}
+
+func (cc PesertaCimpaController) UpdateBuktiBayar(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+
+	fmt.Println("MASUK UPDATE BUKTI BAYAR")
+
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		fmt.Println("FORM FILE ERROR")
+	}
+	form_id := r.PostFormValue("id")
+	if err != nil {
+		fmt.Println("FORM ID ERROR")
+	}
+
+	uploadUrl, err := services.NewMediaUpload().FileUpload(models.File{File: file})
+	if err != nil {
+		fmt.Println("Upload URL services error")
+	}
+	// fmt.Printf("%+v\n", u)
+	// fmt.Printf("%s\n", u.Id)
+
+	err = models.UpdateBuktiBayar(uploadUrl, form_id)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
-	fmt.Fprintf(w, "%s", uj)
+	fmt.Fprintf(w, "Status Konfirmasi Peserta dengan id %s berhasil di update", form_id)
+
 }
 
 func (cc PesertaCimpaController) DeleteAll(w http.ResponseWriter, r *http.Request, p httprouter.Params) {

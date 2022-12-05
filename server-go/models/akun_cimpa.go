@@ -42,6 +42,7 @@ func GetAkunByUsername(username string, password string) (AkunCimpaResult, error
 
 	err = stmt.QueryRow(username).Scan(&akun.Username, &akun.Password, &akun.Klasis)
 	if err != nil {
+		err := errors.New("USERNAME TIDAK DITEMUKAN")
 		return akun, err
 	}
 

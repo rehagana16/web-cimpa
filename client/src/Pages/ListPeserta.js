@@ -71,6 +71,12 @@ function ListPeserta() {
                                 <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
                                     Foto
                                 </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
+                                    Bukti Bayar
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
+                                    Status Konfirmasi
+                                </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,6 +109,12 @@ function ListPeserta() {
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                                             {data.foto}
                                         </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                                            {data.bukti_bayar === "" ? "BELUM ADA" : data.bukti_bayar}
+                                        </td>
+                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                                            {data.is_confirmed ? "SUDAH" : "BELUM"}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -114,9 +126,11 @@ function ListPeserta() {
                 <button onClick={cekStatusKonfirmasi} class="flex my-4 justify-center bg-blue-700 hover:bg-blue-900s text-white font-bold py-2 px-4 border border-blue-700 rounded">
                     Cek Status Konfirmasi
                 </button>
-                <button onClick={goToRegistration} class="flex justify-center bg-blue-700 hover:bg-blue-900s text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                    Registrasi Peserta
-                </button>
+                {klasis === "Admin" ? null : (
+                    <button onClick={goToRegistration} class="flex justify-center bg-blue-700 hover:bg-blue-900s text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                        Registrasi Peserta
+                    </button>
+                )}
                 </div>
             </div>
         </div>

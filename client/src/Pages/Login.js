@@ -10,6 +10,8 @@ const user = {
 
 function Login() {
     const [loginData, setLoginData] = useState(user)
+    const [showModal, setShowModal] = useState(false)
+    const [message, setMessage] = useState("")
     const [cookies, setCookie] = useCookies(['user'])
     const navigate = useNavigate();
 
@@ -30,6 +32,11 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
+        if (loginData.password === "" || loginData.username === "") {
+            setMessage("DATA TIDAK BOLEH KOSONG")
+            setShowModal(true)
+            return
+        }
         Axios.post("/api/akunCimpa/login", {
             username : loginData.username,
             password : loginData.password
@@ -43,7 +50,9 @@ function Login() {
 
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error.response.data)
+                setMessage(error.response.data)
+                setShowModal(true)
             })
         console.log("LOGIN BUTTON PRESSED")
     }
@@ -100,6 +109,28 @@ function Login() {
                 </div>
                 </div>
             </div>
+            {showModal ? (
+                <>
+                    <div className="flex justify-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                        <div className="border-0 bg-red-200 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                            <div className="relative p-6 text-red-500 flex-auto">
+                                "{message}"
+                            </div>
+                            <div className="flex items-center justify-end border-t border-solid border-blueGray-200 rounded-b">
+                            <button
+                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                                type="button"
+                                onClick={() => setShowModal(false)}
+                            >
+                                Close
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </>
+            ) : null}
         </div>
     )
 }
