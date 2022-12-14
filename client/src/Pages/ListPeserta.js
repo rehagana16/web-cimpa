@@ -110,7 +110,7 @@ function ListPeserta() {
                                             {data.foto}
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.bukti_bayar === "" ? "BELUM ADA" : data.bukti_bayar}
+                                            {data.bukti_bayar === "" ? "BELUM ADA" : <a href={data.bukti_bayar}>Link Bukti Bayar</a>}
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                                             {data.is_confirmed ? "SUDAH" : "BELUM"}

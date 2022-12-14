@@ -109,7 +109,7 @@ func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 
 func GetAllPesertaCimpa() ([]PesertaCimpaDetail, error) {
 	//select peserta
-	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa"
+	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, bukti_bayar, link_sosmed, foto, is_confirmed FROM peserta_cimpa"
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
 	var allPeserta []PesertaCimpaDetail
@@ -119,7 +119,7 @@ func GetAllPesertaCimpa() ([]PesertaCimpaDetail, error) {
 
 	for rows.Next() {
 		var peserta PesertaCimpaDetail
-		if err := rows.Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun,
+		if err := rows.Scan(&peserta.Id, &peserta.Nama, &peserta.Klasis, &peserta.Runggun,
 			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
 			&peserta.BuktiBayar, &peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
 			panic(err)

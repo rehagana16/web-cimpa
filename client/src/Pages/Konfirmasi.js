@@ -43,6 +43,24 @@ function Konfirmasi(){
                 console.log(error)
             })
     }
+    const deleteBukti = (id, event) => {
+        event.preventDefault();
+        console.log(id)
+        Axios.put("/api/pesertaCimpa/ChangeBuktiBayar/" + id)
+            .then((response) => {
+                console.log(response)
+                window.location.reload()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const konfirmasi = (id, event) => {
+        event.preventDefault();
+        console.log("konfirmasi")
+        console.log(id)
+    }
     useEffect(() => {
         getAllPesertaByKlasis()
     }, [])
@@ -94,15 +112,31 @@ function Konfirmasi(){
                                             {data.is_confirmed ? "SUDAH" : "BELUM"}
                                         </td>
                                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.bukti_bayar === "" ? "BELUM ADA" : <a href={data.bukti_bayar}> Link Bukti Bayar</a>}
+                                            {data.bukti_bayar === "" ? "BELUM ADA" : <a href={data.bukti_bayar}>Link Bukti Bayar</a>}
                                         </td>
                                         <td>
-                                            {data.bukti_bayar === "" ? (<input 
+                                            {data.bukti_bayar === "" ? 
+                                                klasis === "Admin" ? (null) :
+                                            (<input 
                                                 type="file"
                                                 name="bukti_bayar" 
                                                 onChange={(event) => {uploadFoto(data.id, event)}}
                                                 class="flex justify-center py-2 px-4 rounded"
-                                            />) : null}
+                                            />) : ( 
+                                                klasis === "Admin" ? 
+                                                <button onClick={(event) => konfirmasi(data.id, event)}>
+                                                    Konfirmasi
+                                                </button> : (
+                                                    data.is_confirmed ? ( 
+                                                            "SUDAH DIKONFIRMASI"
+                                                        ) : ( klasis !== "Admin" ? (
+                                                            <button onClick={(event) => deleteBukti(data.id, event)}>
+                                                                Delete Bukti
+                                                            </button>
+                                                        ) : null
+                                                    )
+                                                )
+                                            )}
                                                 {/* {klasis === "Admin" ? "Konfirmasi" : "Upload Bukti Bayar"} */}
                                         </td>
                                     </tr>

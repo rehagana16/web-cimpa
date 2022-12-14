@@ -157,11 +157,32 @@ func (cc PesertaCimpaController) UpdateBuktiBayar(w http.ResponseWriter, r *http
 
 	if err != nil {
 		fmt.Println(err.Error())
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "%s", "fails run sql query")
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
 	fmt.Fprintf(w, "Status Konfirmasi Peserta dengan id %s berhasil di update", form_id)
+
+}
+
+func (cc PesertaCimpaController) ChangeBuktiBayar(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, HEAD, PATCH, OPTIONS, GET, PUT")
+
+	err := models.UpdateBuktiBayar("", p.ByName("id"))
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "%s", "FAIL TO DELETE BUKTI BAYAR")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "%s", "Bukti bayar deleted")
 
 }
 

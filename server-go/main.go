@@ -24,11 +24,18 @@ func main() {
 	router.DELETE("/api/pesertaCimpa/deleteAll", pc.DeleteAll)
 	router.PUT("/api/pesertaCimpa/UpdateKonfirmasi", pc.ConfirmPeserta)
 	router.POST("/api/pesertaCimpa/UpdateBuktiBayar", pc.UpdateBuktiBayar)
+	router.PUT("/api/pesertaCimpa/ChangeBuktiBayar/:id", pc.ChangeBuktiBayar)
 
 	router.POST("/api/akunCimpa", ac.CreateAkunCimpa)
 	router.DELETE("/api/akunCimpa", ac.DeleteAllAkunCimpa)
 	router.POST("/api/akunCimpa/login", ac.Login)
 
-	handler := cors.Default().Handler(router)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut},
+		AllowCredentials: true,
+	})
+
+	handler := c.Handler(router)
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", handler))
 }
