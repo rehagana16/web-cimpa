@@ -1,9 +1,9 @@
 import axios from "axios"
 
 const Axios = axios.create({
-    // baseURL:"http://localhost:8080"
+    baseURL:"http://localhost:8080"
 
-    baseURL:"https://api.cimpa.permatagbkp.org"
+    // baseURL:"https://api.cimpa.permatagbkp.org"
 })
 
 Axios.defaults.headers.post['Content-Type'] = true;

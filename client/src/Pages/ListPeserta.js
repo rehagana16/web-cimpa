@@ -6,6 +6,8 @@ import jwt_decode from "jwt-decode"
 
 function ListPeserta() {
     const [cookies, setCookie] = useCookies(['user'])
+    const [filteredResult, setFilteredResult] = useState(null)
+    const [searchValue, setSearchValue] = useState("")
     var decoded = jwt_decode(cookies.Token)
     const klasis = decoded.klasis //will retrieved from cookie
     const navigate = useNavigate();
@@ -14,11 +16,17 @@ function ListPeserta() {
         Axios.get("api/pesertaCimpa/?klasis=" + klasis)
             .then((res) => {
                 setAllPeserta(res.data)
+                setFilteredResult(res.data)
                 console.log(res.data)
             })
             .catch(() => {
                 console.log("ERROR WHEN FETCH ALL PESERTA IN KLASIS")
             })
+    }
+
+    const handleChange = (e) => {
+        e.preventDefault()
+        setSearchValue(e.target.value)
     }
 
     const cekStatusKonfirmasi = () => {
@@ -48,6 +56,13 @@ function ListPeserta() {
                     <div className="flex justify-center text-5xl mt-16 mb-16 lg:mt-8 lg:mb-4 lg:text-3xl">List Peserta</div>
                     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8 p-16 scrollbar">
                         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                            <input 
+                                className="text-black rounded mb-4"
+                                type="text"
+                                placeholder="Masukkan nama peserta"
+                                onChange={handleChange}
+                                value = {searchValue}
+                            />
                             <div class="overflow-hidden">
                                 <table class="min-w-full border text-center text-3xl lg:text-sm">
                                 <thead class="border-b">
@@ -85,7 +100,7 @@ function ListPeserta() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {allPeserta.map((data, index)=>(
+                                    {searchValue.length > 0 ? (filteredResult.filter(peserta => peserta.nama.toLowerCase().match(searchValue.toLowerCase())).map((data, index)=>(
                                         <tr className="border-b">
                                             <td class="px-6 py-4 whitespace-nowrap  font-medium border-r">
                                                 {index + 1}
@@ -118,7 +133,40 @@ function ListPeserta() {
                                                 {data.is_confirmed ? "SUDAH" : "BELUM"}
                                             </td>
                                         </tr>
-                                    ))}
+                                    ))) : (allPeserta.map((data, index)=>(
+                                        <tr className="border-b">
+                                            <td class="px-6 py-4 whitespace-nowrap  font-medium border-r">
+                                                {index + 1}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.nama}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.klasis}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.runggun}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.id_peserta}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.jenis_kelamin}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.no_telp}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.link_sosmed}
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                <a href={data.foto}>Link Foto</a>
+                                            </td>
+                                            <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                {data.is_confirmed ? "SUDAH" : "BELUM"}
+                                            </td>
+                                        </tr>
+                                    )))}
                                 </tbody>
                                 </table>
                             </div>
