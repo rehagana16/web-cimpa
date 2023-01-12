@@ -1,7 +1,10 @@
+/* similar color : 
+   #231955 
+*/
 body {
-    background-image: url("/background.png");
-    background-size: cover;
     font-family: 'Roboto', sans-serif;
+    background-color: #201e45;
+
 }
 
 .full-height-box {
@@ -29,9 +32,9 @@ body {
 }
 
 .input-error:focus {
-    color: #212529;
-    background-color: #fff;
-    border-color: #86b7fe;
+    color: white;
+    background-color: transparent;
+    border-color: #2451e2;
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 }
@@ -44,22 +47,28 @@ body {
     font-weight: 400;
     line-height: 1.5;
     border: 2px solid #e63946;
-    background-clip: padding-box;
+    background-color: transparent;
     appearance: none;
     border-radius: 0.25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 .input-not-error {
     display: block;
+    color:#eba110;
     width: 100%;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    background-clip: padding-box;
+    background-color: transparent;
+    border : solid 2px #eba110;
     appearance: none;
     border-radius: 0.25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.input-not-error:focus {
+    color:white
 }
 
 .error {
@@ -76,13 +85,18 @@ body {
     margin-bottom: 20px;
 }
 
-.labelRegistration {
-    font-size: 14px;
-    color: #6B778C;
+@media only screen and (min-width: 768px){
+    .labelRegistration {
+        font-size: 14px;
+        color: #6B778C;
+        margin-bottom:2rem;
+    }
 }
 
-.form-control {
-    border: 2px solid #A5A6F6;
+.labelRegistration{
+    font-size: 2rem;
+    color: #6B778C;
+    margin-bottom:2rem;
 }
 
 .table{
@@ -128,4 +142,26 @@ img.logomupel-width {
 
 .login-box {
     width: 30%;
+}
+
+/* Change the white to any color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #201e45 inset !important;
+}
+
+/*Change text in autofill textbox*/
+input:-webkit-autofill{
+    -webkit-text-fill-color: #eba110 !important;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 20px;
+    height: 20px;
+  }
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #fff;
 }

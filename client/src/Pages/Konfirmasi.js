@@ -22,31 +22,45 @@ function Konfirmasi(){
     const goBack = () => {
         navigate("/listPeserta")
     }
-    const uploadFoto = (id, event) => {
+    // const uploadFoto = (id, event) => {
+    //     event.preventDefault();
+    //     console.log(id)
+    //     // console.log("TEST")
+    //     const value = event.target.files[0]
+    //     const formData = new FormData()
+    //     formData.append('file', value)
+    //     formData.append('klasis', klasis)
+    //     Axios.post("/api/pesertaCimpa/UpdateBuktiBayar", formData, {
+    //         headers: {
+    //             "Content-Type": "multipart/form-data"
+    //         }
+    //     })
+    //         .then((response) => {
+    //             console.log(response)
+    //             window.location.reload()
+    //         })
+    //         .catch((error) => {
+    //             console.log(error)
+    //         })
+    // }
+    // const deleteBukti = (id, event) => {
+    //     event.preventDefault();
+    //     console.log(id)
+    //     Axios.put("/api/pesertaCimpa/ChangeBuktiBayar/" + id)
+    //         .then((response) => {
+    //             console.log(response)
+    //             window.location.reload()
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
+
+    const konfirmasi = (id, event) => {
         event.preventDefault();
-        console.log(id)
-        // console.log("TEST")
-        const value = event.target.files[0]
-        const formData = new FormData()
-        formData.append('file', value)
-        formData.append('id', id)
-        Axios.post("/api/pesertaCimpa/UpdateBuktiBayar", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
+        Axios.put("/api/pesertaCimpa/UpdateKonfirmasi", {
+            id : id
         })
-            .then((response) => {
-                console.log(response)
-                window.location.reload()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-    const deleteBukti = (id, event) => {
-        event.preventDefault();
-        console.log(id)
-        Axios.put("/api/pesertaCimpa/ChangeBuktiBayar/" + id)
             .then((response) => {
                 console.log(response)
                 window.location.reload()
@@ -55,104 +69,76 @@ function Konfirmasi(){
                 console.log(err)
             })
     }
-
-    const konfirmasi = (id, event) => {
-        event.preventDefault();
-        console.log("konfirmasi")
-        console.log(id)
-    }
     useEffect(() => {
         getAllPesertaByKlasis()
     }, [])
 
     return(
-        allPeserta !== null &&
-        <div>
-            <div>List Peserta</div>
-            <div class="flex flex-col p-16">
-                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="overflow-hidden">
-                            <table class="min-w-full border text-center">
-                            <thead class="border-b">
-                                <tr>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    No.
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    Nama
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    Id Peserta
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    Status Konfirmasi
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    Bukti_Bayar
-                                </th>
-                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 border-r">
-                                    Upload Bukti Bayar
-                                </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {allPeserta.map((data, index)=>(
-                                    <tr className="border-b">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r">
-                                            {index + 1}
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.nama}
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.id_peserta}
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.is_confirmed ? "SUDAH" : "BELUM"}
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                                            {data.bukti_bayar === "" ? "BELUM ADA" : <a href={data.bukti_bayar}>Link Bukti Bayar</a>}
-                                        </td>
-                                        <td>
-                                            {data.bukti_bayar === "" ? 
-                                                klasis === "Admin" ? (null) :
-                                            (<input 
-                                                type="file"
-                                                name="bukti_bayar" 
-                                                onChange={(event) => {uploadFoto(data.id, event)}}
-                                                class="flex justify-center py-2 px-4 rounded"
-                                            />) : ( 
-                                                klasis === "Admin" ? 
-                                                <button onClick={(event) => konfirmasi(data.id, event)}>
-                                                    Konfirmasi
-                                                </button> : (
-                                                    data.is_confirmed ? ( 
-                                                            "SUDAH DIKONFIRMASI"
-                                                        ) : ( klasis !== "Admin" ? (
-                                                            <button onClick={(event) => deleteBukti(data.id, event)}>
-                                                                Delete Bukti
-                                                            </button>
-                                                        ) : null
-                                                    )
-                                                )
-                                            )}
-                                                {/* {klasis === "Admin" ? "Konfirmasi" : "Upload Bukti Bayar"} */}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                            </table>
+        <div className="h-screen lg:h-full p-8 lg:p-2">
+            <div class="flex flex-col text-xl h-full text-white sm:justify-center lg:text-sm">
+                {allPeserta === null ? (
+                    <div className="flex text-5xl items-center justify-center py-32">
+                        BELUM ADA PESERTA TERDAFTAR
+                    </div>  
+                ) : (
+                    <div>
+                        <div className="flex justify-center text-5xl mt-16 mb-16 lg:mt-8 lg:mb-4 lg:text-3xl">Status Konfirmasi</div>
+                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8 p-16">
+                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="overflow-hidden">
+                                    <table class="min-w-full border text-center text-3xl lg:text-sm">
+                                    <thead class="border-b">
+                                        <tr>
+                                        <th scope="col" class="font-medium  px-6 py-4 border-r">
+                                            No.
+                                        </th>
+                                        <th scope="col" class="font-medium  px-6 py-4 border-r">
+                                            Nama
+                                        </th>
+                                        <th scope="col" class="font-medium  px-6 py-4 border-r">
+                                            Id Peserta
+                                        </th>
+                                        <th scope="col" class="font-medium  px-6 py-4 border-r">
+                                            Status Konfirmasi
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {allPeserta.map((data, index)=>(
+                                            <tr className="border-b">
+                                                <td class="px-6 py-4 whitespace-nowrap font-medium  border-r">
+                                                    {index + 1}
+                                                </td>
+                                                <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                    {data.nama}
+                                                </td>
+                                                <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                    {data.id_peserta}
+                                                </td>
+                                                <td class=" font-light px-6 py-4 whitespace-nowrap border-r">
+                                                    {data.is_confirmed ? "SUDAH" : "BELUM"}
+                                                </td>
+                                                <td>
+                                                    <button className="bg-green-700 px-4 py-2 rounded" onClick={(event) => konfirmasi(data.id, event)}>
+                                                        Konfirmasi
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                )}
+                <div className="px-16">
                     <button 
                         onClick={goBack}
-                        className="flex justify-center bg-blue-700 hover:bg-blue-900s text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                        className="flex my-4 mx-6 lg:mx-8 justify-center bg-[#c2451e] text-white hover:bg-blue-900s font-bold py-2 px-4 border border-[#c2451e] rounded"
                     >
                         Back
                     </button>
-                </div>
-                <div>
                 </div>
             </div>
         </div>

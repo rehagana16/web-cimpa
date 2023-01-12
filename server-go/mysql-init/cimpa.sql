@@ -7,7 +7,6 @@ CREATE TABLE `peserta_cimpa` (
   `jenis_kelamin` varchar(255) DEFAULT NULL,
   `no_telp` varchar(255) DEFAULT NULL,
   `link_sosmed` varchar(255) DEFAULT NULL,
-  `bukti_bayar` varchar(255) DEFAULT NULL,
   `foto` varchar(255) DEFAULT NULL,
   `is_confirmed` TINYINT(1) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -21,6 +20,16 @@ CREATE TABLE `akun_cimpa` (
   `password` varchar(255) DEFAULT NULL,
   `klasis` varchar(255) DEFAULT NULL,
   `role` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `bukti_bayar` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bukti_bayar` varchar(255) DEFAULT NULL,
+  `klasis` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

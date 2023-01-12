@@ -39,7 +39,7 @@ type Claims struct {
 
 func (ac AkunCimpaController) CreateAkunCimpa(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	u := models.AkunCimpa{}
 
@@ -62,7 +62,7 @@ func (ac AkunCimpaController) CreateAkunCimpa(w http.ResponseWriter, r *http.Req
 
 func (ac AkunCimpaController) Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var akunBody AkunCimpaBody
 	json.NewDecoder(r.Body).Decode(&akunBody)
 	// fmt.Printf("%+v\n", akunBody)
@@ -111,7 +111,7 @@ func (ac AkunCimpaController) Login(w http.ResponseWriter, r *http.Request, p ht
 
 func (ac AkunCimpaController) DeleteAllAkunCimpa(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	err := models.DeleteAllAkun()
 
 	if err != nil {

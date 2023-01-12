@@ -21,8 +21,10 @@ func main() {
 	router.POST("/api/pesertaCimpa/UploadFoto", mc.FileUpload)
 	router.GET("/api/pesertaCimpa/:id", pc.GetPesertaCimpaWithID)
 	router.GET("/api/pesertaCimpa/", pc.GetAllPesertaCimpaWithKlasis)
+	router.GET("/api/buktibayar/", pc.GetBuktiBayarWithKlasis)
 	router.DELETE("/api/pesertaCimpa/deleteAll", pc.DeleteAll)
 	router.PUT("/api/pesertaCimpa/UpdateKonfirmasi", pc.ConfirmPeserta)
+	router.PUT("/api/pesertaCimpa/ChangeStatusBuktiBayar", pc.GantiStatusBuktiBayar)
 	router.POST("/api/pesertaCimpa/UpdateBuktiBayar", pc.UpdateBuktiBayar)
 	router.PUT("/api/pesertaCimpa/ChangeBuktiBayar/:id", pc.ChangeBuktiBayar)
 

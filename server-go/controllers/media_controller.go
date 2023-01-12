@@ -26,7 +26,7 @@ type MediaResp struct {
 
 func (mc MediaController) FileUpload(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// b, err := io.ReadAll(r.Body)
 	// if err != nil {
 	// 	log.Fatalln(err)
