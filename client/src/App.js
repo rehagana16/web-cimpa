@@ -11,17 +11,14 @@ import ListPeserta from "./Pages/ListPeserta";
 import Konfirmasi from "./Pages/Konfirmasi";
 import Login from "./Pages/Login";
 import UploadBuktiBayar from "./Pages/UploadBuktiBayar";
+import Dashboard from "./Pages/Dashboard";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route exact path='/' element={< Login />}></Route>
-        <Route exact path='/profil' element={< ProfilPeserta />}></Route>
-        <Route exact path='/registrasi' element={<Registration/>}></Route>
-        <Route exact path='/listPeserta' element={<ListPeserta/>}></Route>
-        <Route exact path='/konfirmasi' element={<Konfirmasi/>}></Route>
-        <Route exact path='/uploadbuktibayar' element={<UploadBuktiBayar/>}></Route>
+        <Route exact path='/dashboard' element={< Dashboard />}></Route>
       </Routes>
     </Router>
   );

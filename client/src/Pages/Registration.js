@@ -9,6 +9,7 @@ import jwt_decode from "jwt-decode";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import { Axios } from "../config/axios"
+import NavButton from "../Components/NavButton";
 
 const form = {
     nama: "",
@@ -16,6 +17,8 @@ const form = {
     klasis: "",
     jenisKelamin: "",
     noTelp: "",
+    email: "",
+    sizeBaju: "",
     linkSosmed: "",
     foto: "",
     buktiBayar: "", 
@@ -31,6 +34,7 @@ function Registration() {
     var decoded = jwt_decode(cookies.Token)
     const currKlasis = decoded.klasis
     let ListRunggun = [];
+    let listSizeBaju = ["S", "M", "L", "XL", "XXL", "XXXL"]
     if (currKlasis) {
         const rungguns = data[currKlasis];
         form.klasis = currKlasis;
@@ -39,9 +43,14 @@ function Registration() {
         )
     }
 
+    let ListSize = listSizeBaju.map((size) => (
+        <option className="text-black">{size}</option>
+    ))
     // const [dataKlasis, setDataKlasis] = useState('');
 
     const [linkFoto, setLinkFoto] = useState('');
+
+    const [linkBuktiBayar, setLinkBuktiBayar] = useState('')
 
     const [doneUpload, setDoneUpload] = useState(true);
 
@@ -63,6 +72,10 @@ function Registration() {
             .matches(/^(08)(\d{2})(\d{5,9})$/g,
                 "Invalid phone number"
             ),
+        email: Yup.string()
+            .required("Harap masukkan email anda"),
+        sizeBaju: Yup.string()
+            .required("Harap pilih size baju anda"),
         linkSosmed: Yup.string()
             .required("Harap masukkan link media sosial anda(Instagram/Facebook)"),
         jenisKelamin: Yup.string()
@@ -84,13 +97,37 @@ function Registration() {
                     return value && SUPPORTED_FORMATS.includes(value.type);
                 }
             ),
+        buktiBayar: Yup
+            .mixed()
+            .required("Harap masukkan bukti bayar anda")
+            .test(
+                "Bukti Bayar",
+                "Harap masukkan file lebih kecil dari 10MB",
+                value => {
+                    return value && value.size <= FILE_SIZE;
+                }
+            )
+            .test(
+                "Bukti Bayar",
+                "Harap Masukkan foto berupa jpeg/jpg/png",
+                value => {
+                    return value && SUPPORTED_FORMATS.includes(value.type);
+                }
+            ),
     })
 
     useEffect(() => {
         document.title = "Pendaftaran";
     }, [])
 
-    const previewFile = (value) => {
+    // useEffect(() => {
+    //     console.log("LINK FOTO")
+    //     console.log(linkFoto)
+    //     console.log("LINK BUKTI BAYAR")
+    //     console.log(linkBuktiBayar)
+    // }, [linkBuktiBayar, linkFoto])
+
+    const uploadFile = (value) => {
         const formData = new FormData()
         formData.append('file', value)
         setDoneUpload(false)
@@ -108,8 +145,25 @@ function Registration() {
             })
     }
 
+    const uploadBuktiBayar = (value) => {
+        const formData = new FormData()
+        formData.append('file', value)
+        setDoneUpload(false)
+        Axios.post("/api/pesertaCimpa/UploadFoto", formData,{
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+            .then((response) => {
+                setLinkBuktiBayar(response.data.response_url)
+                setDoneUpload(true)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     const onClick = (value) => {
-        console.log(value)
 
         Axios.post("/api/pesertaCimpa/", {
             Nama: value.nama,
@@ -118,9 +172,11 @@ function Registration() {
             Jenis_Kelamin: value.jenisKelamin,
             No_Telp: value.noTelp,
             Link_Sosmed: value.linkSosmed,
-            // isConfirmed: value.isConfirmed,
+            Email: value.email,
+            Size_Baju: value.sizeBaju,
             Id_Peserta: value.pesertaId,
-            Foto: linkFoto
+            Foto: linkFoto,
+            Bukti_Bayar: linkBuktiBayar,
         })
             .then((response) => {
                 console.log(response)
@@ -135,7 +191,7 @@ function Registration() {
 
     if (currKlasis !== "") {
         return (
-            <>
+            <div className="h-screen lg:h-full">
             <Formik
                 initialValues={form}
                 validationSchema={registerSchema}
@@ -147,7 +203,6 @@ function Registration() {
                     const { errors, touched, isValid, dirty, setFieldValue, values } = formik;
                     return (
                         <div className="flex flex-col p-8 justify-center items-center text-3xl h-screen lg:h-full lg:text-sm">
-                            <h1 className="text-5xl text-[#eba110] lg:text-3xl">Pendaftaran</h1>
                             <div className="w-full lg:w-1/3">
                                 <div className="flex-column">
                                     <div className="justify-center inputForm">
@@ -210,6 +265,33 @@ function Registration() {
                                                     <ErrorMessage name="noTelp" component="noTelp" className="error" />
                                             </div>
                                             <div className="form-row">
+                                                    <label className="text-3xl text-[#6B778C] mb-2 lg:text-sm" htmlFor="email">Email</label>
+                                                    <Field
+                                                        type="text"
+                                                        name="email"
+                                                        id="email"
+                                                        className={
+                                                            errors.email && touched.email ? "input-error" : "form-control input-not-error"
+                                                        }
+                                                    />
+                                                    <ErrorMessage name="noTelp" component="noTelp" className="error" />
+                                            </div>
+                                            <div className="form-row">
+                                                <label className="text-3xl text-[#6B778C] mb-2 lg:text-sm" htmlFor="sizeBaju">Size Baju</label>
+                                                <Field
+                                                    as="Select"
+                                                    name="sizeBaju"
+                                                    id="sizeBaju"
+                                                    className={
+                                                        errors.sizeBaju && touched.sizeBaju ? "input-error" : "form-control input-not-error"
+                                                    }
+                                                >
+                                                    <option className="text-black" value="">---PILIH SIZE BAJU ANDA---</option>
+                                                    {ListSize}
+                                                </Field>
+                                                <ErrorMessage name="sizeBaju" component="sizeBaju" className="error" />
+                                            </div>
+                                            <div className="form-row">
                                                 
                                                     <label className="text-3xl text-[#6B778C] mb-2 lg:text-sm" htmlFor="linkSosmed">Link media sosial</label>
                                                     <Field
@@ -229,9 +311,22 @@ function Registration() {
                                                     <label className="text-3xl text-[#6B778C] mb-2 lg:text-sm" htmlFor="foto">Foto</label>
                                                     <input id="foto" name="foto" type="file" onChange={(event) => {
                                                         setFieldValue("foto", event.currentTarget.files[0]);
-                                                        previewFile(event.currentTarget.files[0]);
+                                                        uploadFile(event.currentTarget.files[0]);
                                                     }} className={
                                                         (errors.foto) ? "input-error" : "form-control input-not-error"
+                                                    } />
+                                                    <div className="warning">File harus berupa foto(jpg/jpeg/png) dan ukuran lebih kecil dari 10MB</div>
+
+                                            </div>
+                                            <div className="form-row">
+                                                <input type="hidden" name="buktiBayar" value="Bukti Bayar" />
+                                                
+                                                    <label className="text-3xl text-[#6B778C] mb-2 lg:text-sm" htmlFor="buktiBayar">Bukti Bayar</label>
+                                                    <input id="buktiBayar" name="buktiBayar" type="file" onChange={(event) => {
+                                                        setFieldValue("buktiBayar", event.currentTarget.files[0]);
+                                                        uploadBuktiBayar(event.currentTarget.files[0]);
+                                                    }} className={
+                                                        (errors.buktiBayar) ? "input-error" : "form-control input-not-error"
                                                     } />
                                                     <div className="warning">File harus berupa foto(jpg/jpeg/png) dan ukuran lebih kecil dari 10MB</div>
 
@@ -243,8 +338,6 @@ function Registration() {
                                                                 : "flex my-4 justify-center bg-[#c2451e] text-white hover:bg-blue-900s font-bold py-2 px-4 border border-[#c2451e] rounded"}
                                                 disabled={!(dirty && isValid && doneUpload)}>{!doneUpload ? "Sedang Mengunggah" : "Submit"}</button>
                                         </Form>
-                                        <Link to="/listPeserta" ><button
-                                            className="flex my-4 justify-center bg-[#c2451e] text-white hover:bg-blue-900s font-bold py-2 px-4 border border-[#c2451e] rounded">Lihat data</button></Link>
                                     </div>
                                 </div >
                             </div >
@@ -265,7 +358,7 @@ function Registration() {
                     </div>
                 </>
             ) : null}
-            </>
+            </div>
         )
     } else if (currKlasis === "") {
         return (

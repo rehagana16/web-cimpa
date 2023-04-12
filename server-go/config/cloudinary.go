@@ -8,7 +8,7 @@ import (
 )
 
 func EnvCloudName() string {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/permatagbkp/golangapp/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -16,7 +16,7 @@ func EnvCloudName() string {
 }
 
 func EnvCloudAPIKey() string {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/permatagbkp/golangapp/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -24,7 +24,7 @@ func EnvCloudAPIKey() string {
 }
 
 func EnvCloudAPISecret() string {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/permatagbkp/golangapp/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -32,7 +32,7 @@ func EnvCloudAPISecret() string {
 }
 
 func EnvCloudUploadFolder() string {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/permatagbkp/golangapp/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

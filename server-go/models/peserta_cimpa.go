@@ -12,8 +12,11 @@ type PesertaCimpa struct {
 	IdPeserta    string `json:"id_peserta"`
 	JenisKelamin string `json:"jenis_kelamin"`
 	NoTelp       string `json:"no_telp"`
+	Email        string `json:"email"`
+	SizeBaju     string `json:"size_baju"`
 	LinkSosmed   string `json:"link_sosmed"`
 	Foto         string `json:"foto"`
+	BuktiBayar   string `json:"bukti_bayar"`
 	// IsConfirmed  bool   `json:"is_confirmed"`
 }
 
@@ -25,8 +28,11 @@ type PesertaCimpaDetail struct {
 	IdPeserta    string `json:"id_peserta"`
 	JenisKelamin string `json:"jenis_kelamin"`
 	NoTelp       string `json:"no_telp"`
+	Email        string `json:"email"`
+	SizeBaju     string `json:"size_baju"`
 	LinkSosmed   string `json:"link_sosmed"`
 	Foto         string `json:"foto"`
+	BuktiBayar   string `json:"bukti_bayar"`
 	IsConfirmed  bool   `json:"is_confirmed"`
 }
 
@@ -37,8 +43,11 @@ type PesertaCimpaResult struct {
 	IdPeserta    string `json:"id_peserta"`
 	JenisKelamin string `json:"jenis_kelamin"`
 	NoTelp       string `json:"no_telp"`
+	Email        string `json:"email"`
+	SizeBaju     string `json:"size_baju"`
 	LinkSosmed   string `json:"link_sosmed"`
 	Foto         string `json:"foto"`
+	BuktiBayar   string `json:"bukti_bayar"`
 }
 
 type BuktiBayarResult struct {
@@ -48,8 +57,12 @@ type BuktiBayarResult struct {
 	Status     string `json:"status"`
 }
 
-type IdPeserta struct {
-	Id string `json:"id"`
+type ConfirmPesertaInput struct {
+	Id               string `json:"id"`
+	KlasisCode       string `json:"klasisCode"`
+	RunggunCode      string `json:"runggunCode"`
+	JenisKelaminCode string `json:"jenisKelaminCode"`
+	Email            string `json:"email"`
 }
 
 type BuktiBayarInput struct {
@@ -57,15 +70,28 @@ type BuktiBayarInput struct {
 	Message string `json:"message"`
 }
 
+type ChangeBuktiBayarInput struct {
+	Id  string `json:"id"`
+	Url string `json:"url"`
+}
+
+type SendEmailInput struct {
+	Email string `json:"email"`
+	Id    string `json:"id"`
+}
+
+type CreateQRInput struct {
+	Id string `json:"id"`
+}
+
 func CreatePeserta(od PesertaCimpa) (PesertaCimpa, error) {
 
 	//insert values
-	sqlStr := "INSERT into peserta_cimpa(nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, foto, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	sqlStr := "INSERT into peserta_cimpa(nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, email, size_baju, link_sosmed, foto, bukti_bayar, is_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
-	fmt.Println("CHECKPOINT")
-	_, err = stmt.Exec(od.Nama, od.Klasis, od.Runggun, od.IdPeserta, od.JenisKelamin, od.NoTelp, od.LinkSosmed, od.Foto, 0)
+	_, err = stmt.Exec(od.Nama, od.Klasis, od.Runggun, od.IdPeserta, od.JenisKelamin, od.NoTelp, od.Email, od.SizeBaju, od.LinkSosmed, od.Foto, od.BuktiBayar, 0)
 	checkErr(err)
 
 	return od, nil
@@ -73,13 +99,47 @@ func CreatePeserta(od PesertaCimpa) (PesertaCimpa, error) {
 
 func UpdateStatusKonfirmasiPeserta(id string) error {
 	//update value
-	sqlStr := "UPDATE peserta_cimpa SET is_confirmed=1 WHERE id=?"
+	sqlStr := "UPDATE peserta_cimpa SET is_confirmed=is_confirmed^1 WHERE id=?"
 	stmt, err := config.DB.Prepare(sqlStr)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 	_, err = stmt.Exec(id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func UpdatePesertaId(pesertaId string, id string) error {
+	//update value
+	sqlStr := "UPDATE peserta_cimpa SET id_peserta=? WHERE id=?"
+	stmt, err := config.DB.Prepare(sqlStr)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(pesertaId, id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func ChangeBuktiBayar(id string, url string) error {
+	//update value
+	sqlStr := "UPDATE peserta_cimpa SET bukti_bayar=? WHERE id=?"
+	stmt, err := config.DB.Prepare(sqlStr)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(url, id)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -105,31 +165,31 @@ func UpdateBuktiBayar(url string, klasis string) error {
 	return nil
 }
 
-func DeleteBuktiBayarID(id string) error {
-	//delete value
-	sqlStr := "DELETE FROM bukti_bayar WHERE id=?"
-	stmt, err := config.DB.Prepare(sqlStr)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	_, err = stmt.Exec(id)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+// func DeleteBuktiBayarID(id string) error {
+// 	//delete value
+// 	sqlStr := "DELETE FROM bukti_bayar WHERE id=?"
+// 	stmt, err := config.DB.Prepare(sqlStr)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return err
+// 	}
+// 	_, err = stmt.Exec(id)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return err
+// 	}
 
-	return nil
+// 	return nil
 
-}
+// }
 
 func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 	//select peserta
-	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, foto FROM peserta_cimpa WHERE id=?"
+	sqlStr := "SELECT nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, email, size_baju, link_sosmed, foto, bukti_bayar FROM peserta_cimpa WHERE id=?"
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
 	var peserta PesertaCimpaResult
-	err = stmt.QueryRow(id).Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun, &peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.LinkSosmed, &peserta.Foto)
+	err = stmt.QueryRow(id).Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun, &peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.Email, &peserta.SizeBaju, &peserta.LinkSosmed, &peserta.Foto, &peserta.BuktiBayar)
 	checkErr(err)
 
 	return peserta, nil
@@ -137,19 +197,18 @@ func GetPesertaCimpaByID(id string) (PesertaCimpaResult, error) {
 
 func GetAllPesertaCimpa() ([]PesertaCimpaDetail, error) {
 	//select peserta
-	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, foto, is_confirmed FROM peserta_cimpa"
+	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, email, size_baju, link_sosmed, foto, bukti_bayar, is_confirmed FROM peserta_cimpa"
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
 	var allPeserta []PesertaCimpaDetail
 	// err = stmt.Query(klasis).Scan(&peserta.Nama, &peserta.Klasis, &peserta.Runggun, &peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.LinkSosmed, &peserta.Foto)
 	rows, err := stmt.Query()
 	checkErr(err)
-
 	for rows.Next() {
 		var peserta PesertaCimpaDetail
 		if err := rows.Scan(&peserta.Id, &peserta.Nama, &peserta.Klasis, &peserta.Runggun,
-			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
-			&peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
+			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.Email, &peserta.SizeBaju,
+			&peserta.LinkSosmed, &peserta.Foto, &peserta.BuktiBayar, &peserta.IsConfirmed); err != nil {
 			panic(err)
 		}
 		allPeserta = append(allPeserta, peserta)
@@ -189,7 +248,7 @@ func GetAllBuktiBayar() ([]BuktiBayarResult, error) {
 
 func GetAllPesertaCimpaByKlasis(klasis string) ([]PesertaCimpaDetail, error) {
 	//select peserta
-	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, link_sosmed, foto, is_confirmed FROM peserta_cimpa WHERE klasis=?"
+	sqlStr := "SELECT id, nama, klasis, runggun, id_peserta, jenis_kelamin, no_telp, email, size_baju, link_sosmed, foto, bukti_bayar, is_confirmed FROM peserta_cimpa WHERE klasis=?"
 	stmt, err := config.DB.Prepare(sqlStr)
 	checkErr(err)
 	var allPeserta []PesertaCimpaDetail
@@ -200,8 +259,8 @@ func GetAllPesertaCimpaByKlasis(klasis string) ([]PesertaCimpaDetail, error) {
 	for rows.Next() {
 		var peserta PesertaCimpaDetail
 		if err := rows.Scan(&peserta.Id, &peserta.Nama, &peserta.Klasis, &peserta.Runggun,
-			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp,
-			&peserta.LinkSosmed, &peserta.Foto, &peserta.IsConfirmed); err != nil {
+			&peserta.IdPeserta, &peserta.JenisKelamin, &peserta.NoTelp, &peserta.Email, &peserta.SizeBaju,
+			&peserta.LinkSosmed, &peserta.Foto, &peserta.BuktiBayar, &peserta.IsConfirmed); err != nil {
 			panic(err)
 		}
 		allPeserta = append(allPeserta, peserta)

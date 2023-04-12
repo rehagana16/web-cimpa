@@ -26,7 +26,9 @@ func main() {
 	router.PUT("/api/pesertaCimpa/UpdateKonfirmasi", pc.ConfirmPeserta)
 	router.PUT("/api/pesertaCimpa/ChangeStatusBuktiBayar", pc.GantiStatusBuktiBayar)
 	router.POST("/api/pesertaCimpa/UpdateBuktiBayar", pc.UpdateBuktiBayar)
-	router.PUT("/api/pesertaCimpa/ChangeBuktiBayar/:id", pc.ChangeBuktiBayar)
+	router.PUT("/api/pesertaCimpa/ChangeBuktiBayar", pc.ChangeBuktiBayar)
+	// router.POST("/api/pesertaCimpa/SendMail", pc.SendMail)
+	// router.POST("/api/pesertaCimpa/CreateQR", mc.CreateQR)
 
 	router.POST("/api/akunCimpa", ac.CreateAkunCimpa)
 	router.DELETE("/api/akunCimpa", ac.DeleteAllAkunCimpa)
@@ -39,5 +41,6 @@ func main() {
 	})
 
 	handler := c.Handler(router)
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", handler))
+	// log.Fatal(http.ListenAndServe("127.0.0.1:8080", handler))
+	log.Fatal(http.ListenAndServe(":8092", handler))
 }

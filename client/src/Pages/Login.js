@@ -46,7 +46,7 @@ function Login() {
                     path: '/',
                     maxAge: 86400,
                 })
-                navigate("/listPeserta")
+                navigate("/dashboard")
 
             })
             .catch((error) => {
@@ -82,7 +82,7 @@ function Login() {
                         onChange={onChange}
                         class="form-control block w-full px-4 py-2 text-3xl lg:text-xl font-normal text-[#eba110] bg-transparent border border-solid border-2 border-[#eba110] rounded transition ease-in-out m-0 focus:text-white focus:border-[#c2451e]"
                         id="exampleFormControlInput2"
-                        placeholder="Email address"
+                        placeholder="Username"
                         />
                     </div>
 

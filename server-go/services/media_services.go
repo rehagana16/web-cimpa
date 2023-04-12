@@ -6,6 +6,7 @@ import (
 	"server/models"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/skip2/go-qrcode"
 )
 
 var (
@@ -25,20 +26,16 @@ func NewMediaUpload() mediaUpload {
 
 func (*media) FileUpload(file models.File) (string, error) {
 	//validate struct file
-	fmt.Println("Masuk Validate")
 	err := validate.Struct(file)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Keluar validate")
 
 	//upload
-	fmt.Println("Masuk Helper")
 	uploadUrl, err := helper.ImageUploadHelper(file.File)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Keluar Helper")
 
 	return uploadUrl, nil
 }
@@ -56,4 +53,24 @@ func (*media) RemoteUpload(url models.Url) (string, error) {
 		return "", err
 	}
 	return uploadUrl, nil
+}
+
+func CreateQRService(pesertaid string, id string) (string, error) {
+	link := "http://localhost:3000/profile/" + id
+
+	destination := "/home/permatagbkp/golangapp/qrlist/" + pesertaid + ".png"
+
+	err := qrcode.WriteFile(link, qrcode.High, 256, destination)
+
+	if err != nil {
+		panic(err)
+	}
+
+	uploadUrl, err := helper.ImageUploadHelper("qr.png")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return uploadUrl, err
 }

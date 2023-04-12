@@ -27,26 +27,14 @@ type MediaResp struct {
 func (mc MediaController) FileUpload(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	// b, err := io.ReadAll(r.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-	// fmt.Println(string(b))
-	// u := models.File{}
-	// //populate data file
-	// json.NewDecoder(r.Body).Decode(&u)
-	// fmt.Printf("%+v\n", u)
-	fmt.Println("MASUK FILE UPLOAD")
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println("masuk service")
 	uploadUrl, err := services.NewMediaUpload().FileUpload(models.File{File: file})
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println("keluar service")
 
 	d := MediaResp{"1", "success", uploadUrl}
 
@@ -90,4 +78,24 @@ func (mc MediaController) FileUpload(w http.ResponseWriter, r *http.Request, p h
 // 			}
 // 		}
 // 	}
+// }
+
+// func (mc MediaController) CreateQR(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+// 	u := models.CreateQRInput{}
+
+// 	json.NewDecoder(r.Body).Decode(&u)
+
+// 	uploadUrl, err := services.CreateQRService(u.Id)
+// 	if err != nil {
+// 		fmt.Println(err.Error())
+// 	}
+
+// 	d := MediaResp{"1", "success", uploadUrl}
+
+// 	uj, _ := json.Marshal(d)
+
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(201)
+// 	fmt.Fprintf(w, "%s", uj)
 // }

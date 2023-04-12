@@ -16,7 +16,7 @@ const data = {
 
     "Riau-Sumbar": ["Pekanbaru", "Bukit Raya", "Minas Timur", "Sei Buatan", "Dumai", "Logas Tanah Darat", "Km. 15 Perawang",
                     "Ujung Batu", "Balam", "Pangkalan Kerinci", "Kandis", "Lubuk Dalam", "Sei Medang", "Duri", "Munas",
-                    "Bagan Batu", "Rokan Hulu", "Air Molek", "Libo Jaya", "Padang", "Suram", "Tegar"],
+                    "Bagan Batu", "Rokan Hulu", "Air Molek", "Libo Jaya", "Padang", "Suram", "Tegar", "Minas Barat"],
 
     "Kepulauan Riau": ["Batam Center", "Batam Kota", "Batu Aji Batam", "Bida Ayu", "Tanjung Balai Karimun", "Tanjung Pinang",
                        "Teluk Sasah/Bintan", "Tiban-Batam"],
@@ -62,7 +62,7 @@ const data = {
                         "Pujidadi", "Simpang Awas", "Teuku Umar", "Tanjung Gunung", "Cingkes", "Serbajadi", "Aman Dame",
                         "Stabat", "Petani Jaya", "Tanjung Pura Gebang", "Tiga Sabah", "Bencirem", "Securai", 
                         "Pasar VII Kuala Mencirim", "Bandar Kasih", "Titi Mangga", "Tangkahan", "Pasar IV Namuterasi",
-                        "Pasar VII Namuterasi", "Pangkalan Susu", "Batang Serangen", "Sampan Getek", "Beguldah", 
+                        "Pasar VIII Namuterasi", "Pangkalan Susu", "Batang Serangen", "Sampan Getek", "Beguldah", 
                         "Kwala Unggas", "Namo Tating"],
 
     "Kuala Langkat": ["Bahorok", "Gotong Royong", "Kuala", "Namo Ukur", "Padang Cermin", "Tanjung Keriahen", "Telagah", "Marike",
@@ -104,9 +104,9 @@ const data = {
                   "Batu Lima", "Jl. S.M. Raja", "R. Merah", "Perdagangan", "Serbelawan"],
 
     "Tiga Binanga": ["Baluran Tupang Telu", "Batu Mamak Nageri", "Bungabaru - Benjire", "Gunung", "1 Juhar", "2 Juhar", "Kendit Kenderan",
-                     "Kidupen", "Kuala/Kutabuara", "Kuta Bangun", "Kuta Galoh Kutaraya", "Gugung", "Mbelin", "Kuta Gerat", "Kem-kem",
-                     "Lau Kapor", "Liang Melas Datas", "Limang", "Mbetong", "Nageri Jahe - Gunung Meriah", "Perbesi", "Pergendangen",
-                     "Pertumbuken", "Keriahen", "Sukma", "Tigabinanga"],
+                     "Kidupen", "Kuala/Kutabuara", "Kuta Bangun", "Kuta Galoh", "Kuta Gugung", "Kuta Mbelin", "Kuta Gerat", "Kem-kem",
+                     "Lau Kapor", "Liang Melas Datas", "Limang", "Kuta Mbelin-Mbetong", "Nageri Jahe - Gunung Meriah", "Perbesi", "Pergendangen",
+                     "Pertumbuken", "Keriahen", "Sukma", "Tigabinanga", "Kuta Raya", "Kuta Kendit Kanaan"],
 
     "Munte": ["Biak Nampe", "Kuta Mbaru", "Kaban Tua", "Pasar Baru Munte", "Pernantin", "Sarimunte", "Sarinembah", "Selakkar",
               "Semangat Maju", "Singgamanik", "Sugihen", "Sukababo", "Tanjung Beringin", "Buah Manteman Munte", "Petumbungen - Parimbalang",

@@ -1,4 +1,6 @@
 import axios from "axios";
+import codeKlasis from "../data/codeKlasis";
+import codeRunggun from "../data/codeRunggun";
 
 const getCookie = (cname) => {
     let name = cname + "=";
@@ -29,9 +31,10 @@ const getStatusCode = (value) => {
 }
 
 const getJenisKelaminCode = (value) => {
-    if (value.jenisKelamin === "Laki-laki") {
-        return "L"
-    } return "P"
+    console.log(value)
+    if (value === "Laki-laki") {
+        return "1"
+    } return "2"
 }
 
 
@@ -41,12 +44,23 @@ const pad = (num, size) => {
     return num;
 }
 
+const getKlasisCode = (klasis) => {
+    return codeKlasis[klasis]
+}
+
+const getRunggunCode = (klasis, runggun) => {
+    return codeRunggun[klasis][runggun]
+}
+
 const util = {
     getCookie,
     getUtusanCode,
     getStatusCode,
     getJenisKelaminCode,
     pad,
+    getKlasisCode,
+    getRunggunCode,
 }
+
 
 export default util;
